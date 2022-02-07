@@ -9,15 +9,16 @@ public class CameraTest {
 
   @Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  Sensor sensor = context.mock(Sensor.class);
-  MemoryCard mc = context.mock(MemoryCard.class);
+  private final Sensor sensor = context.mock(Sensor.class);
+  private final MemoryCard mc = context.mock(MemoryCard.class);
 
-  Camera cam = new Camera(sensor);
+
   @Test
   public void switchingTheCameraOnPowersUpTheSensor() {
-
+    Camera cam = new Camera(sensor, mc);
 
     context.checking(
+
         new Expectations() {
           {
             exactly(1).of(sensor).powerUp();
@@ -29,10 +30,26 @@ public class CameraTest {
 
   @Test
     public void switchingCameraOffPowersDownSensor() {
+    Camera cam = new Camera(sensor, mc);
+    cam.powerOn();
+
       context.checking(new Expectations() {{
         exactly(1).of(sensor).powerDown();
       }});
 
       cam.powerOff();
+  }
+
+  @Test
+  public void pressingShutterWhenPowerIsOffDoesNothing() {
+    Camera cam = new Camera(sensor, mc);
+
+    context.checking(new Expectations() {{
+      oneOf(cam).pressShutter();
+      will(returnValue(false));
+    }});
+
+    cam.pressShutter();
+
   }
 }

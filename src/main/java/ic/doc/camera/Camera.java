@@ -3,15 +3,21 @@ package ic.doc.camera;
 public class Camera implements WriteListener {
 
   private boolean isOn;
-  final private Sensor sensor;
+  private final Sensor sensor;
+  private final MemoryCard memoryCard;
 
-  Camera(Sensor sensor) {
+  Camera(Sensor sensor, MemoryCard mc) {
     this.sensor = sensor;
+    memoryCard = mc;
+
     isOn = false;
   }
 
-  public void pressShutter() {
-    // not implemented
+  public boolean pressShutter() {
+    if (!isOn) {
+      //return false;
+    }
+    return false;
   }
 
   public void powerOn() {
@@ -25,7 +31,5 @@ public class Camera implements WriteListener {
   }
 
   @Override
-  public void writeComplete() {
-  }
+  public void writeComplete() {}
 }
-
