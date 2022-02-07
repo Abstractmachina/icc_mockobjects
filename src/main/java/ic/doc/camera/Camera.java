@@ -15,11 +15,13 @@ public class Camera implements WriteListener {
   }
 
   public void powerOn() {
+    isOn = true;
     sensor.powerUp();
   }
 
   public void powerOff() {
-    // not implemented
+    sensor.powerDown();
+    isOn = false;
   }
 
   @Override
