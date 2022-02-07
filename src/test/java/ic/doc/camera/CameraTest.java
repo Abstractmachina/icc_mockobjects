@@ -12,9 +12,10 @@ public class CameraTest {
   Sensor sensor = context.mock(Sensor.class);
   MemoryCard mc = context.mock(MemoryCard.class);
 
+  Camera cam = new Camera(sensor);
   @Test
   public void switchingTheCameraOnPowersUpTheSensor() {
-    Camera cam = new Camera(sensor);
+
 
     context.checking(
         new Expectations() {
@@ -24,5 +25,14 @@ public class CameraTest {
         });
 
     cam.powerOn();
+  }
+
+  @Test
+    public void switchingCameraOffPowersDownSensor() {
+      context.checking(new Expectations() {{
+        exactly(1).of(sensor).powerDown();
+      }});
+
+      cam.powerOff();
   }
 }
