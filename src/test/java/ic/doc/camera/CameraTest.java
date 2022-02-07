@@ -4,6 +4,7 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
+import static org.junit.Assert.assertFalse;
 
 public class CameraTest {
 
@@ -43,13 +44,6 @@ public class CameraTest {
   @Test
   public void pressingShutterWhenPowerIsOffDoesNothing() {
     Camera cam = new Camera(sensor, mc);
-
-    context.checking(new Expectations() {{
-      oneOf(cam).pressShutter();
-      will(returnValue(false));
-    }});
-
-    cam.pressShutter();
-
+    assertFalse(cam.pressShutter());
   }
 }

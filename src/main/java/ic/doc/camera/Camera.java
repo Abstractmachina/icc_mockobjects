@@ -15,9 +15,9 @@ public class Camera implements WriteListener {
 
   public boolean pressShutter() {
     if (!isOn) {
-      //return false;
+      return false;
     }
-    return false;
+    return true;
   }
 
   public void powerOn() {
