@@ -1,6 +1,6 @@
 package ic.doc.camera;
 
-public class Camera {
+public class Camera implements WriteListener {
 
   public void pressShutter() {
     // not implemented
@@ -12,6 +12,10 @@ public class Camera {
 
   public void powerOff() {
     // not implemented
+  }
+
+  @Override
+  public void writeComplete() {
   }
 }
 
