@@ -5,6 +5,7 @@ public class Camera implements WriteListener {
   private boolean isOn;
   private final Sensor sensor;
   private final MemoryCard memoryCard;
+  static final byte[] data = { 1, 2, 3, 4};
 
   Camera(Sensor sensor, MemoryCard mc) {
     this.sensor = sensor;
@@ -17,6 +18,8 @@ public class Camera implements WriteListener {
     if (!isOn) {
       return false;
     }
+    sensor.readData();
+    memoryCard.write(data);
     return true;
   }
 
