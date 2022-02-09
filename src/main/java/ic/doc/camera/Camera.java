@@ -22,7 +22,7 @@ public class Camera implements WriteListener {
     }
     sensor.readData();
     memoryCard.write(data);
-    //isIdle = false;
+    isIdle = false;
     return true;
   }
 
@@ -32,17 +32,14 @@ public class Camera implements WriteListener {
   }
 
   public void powerOff() {
-//    if (isIdle) {
-//      sensor.powerDown();
-//      isOn = false;
-//    }
-    sensor.powerDown();
+    if (isIdle) {
+      sensor.powerDown();
       isOn = false;
-
+    }
   }
 
   @Override
   public void writeComplete() {
-    isIdle = true;
+    //isIdle = true;
   }
 }
