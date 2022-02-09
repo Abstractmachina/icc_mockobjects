@@ -63,7 +63,21 @@ public class CameraTest {
     cam.pressShutter();
   }
 
-  // if data is currently being written, switching the camera off does not power down the sensor
+  @Test
+  public void ifDataIsBeingWrittenSwitchingOffCameraDoesNotPowerDownSensor() {
+    Camera cam = new Camera(sensor, memCard);
+
+    context.checking(new Expectations() {{
+      allowing(sensor).powerUp();
+      allowing(sensor).readData();
+      allowing(memCard).write(data);
+      never(sensor).powerDown();
+    }});
+
+    cam.powerOn();
+    cam.pressShutter();
+    cam.powerOff();
+  }
 
   //once writing the data has completed, then the camera powers down the sensor
 }

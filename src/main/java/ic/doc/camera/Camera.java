@@ -3,6 +3,7 @@ package ic.doc.camera;
 public class Camera implements WriteListener {
 
   private boolean isOn;
+  private boolean isIdle;
   private final Sensor sensor;
   private final MemoryCard memoryCard;
   static final byte[] data = { 1, 2, 3, 4};
@@ -12,6 +13,7 @@ public class Camera implements WriteListener {
     memoryCard = mc;
 
     isOn = false;
+    isIdle = true;
   }
 
   public boolean pressShutter() {
@@ -20,6 +22,7 @@ public class Camera implements WriteListener {
     }
     sensor.readData();
     memoryCard.write(data);
+    //isIdle = false;
     return true;
   }
 
@@ -29,10 +32,17 @@ public class Camera implements WriteListener {
   }
 
   public void powerOff() {
+//    if (isIdle) {
+//      sensor.powerDown();
+//      isOn = false;
+//    }
     sensor.powerDown();
-    isOn = false;
+      isOn = false;
+
   }
 
   @Override
-  public void writeComplete() {}
+  public void writeComplete() {
+    isIdle = true;
+  }
 }
