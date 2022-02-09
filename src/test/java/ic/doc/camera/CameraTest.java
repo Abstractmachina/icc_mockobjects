@@ -20,7 +20,7 @@ public class CameraTest {
 
   @Test
   public void switchingTheCameraOnPowersUpTheSensor() {
-    Camera cam = new Camera(sensor, memCard);
+    Camera cam = new Camera(sensor, memCard,data);
 
     context.checking(
         new Expectations() {
@@ -33,7 +33,7 @@ public class CameraTest {
 
   @Test
   public void switchingCameraOffPowersDownSensor() {
-    Camera cam = new Camera(sensor, memCard);
+    Camera cam = new Camera(sensor, memCard, data);
 
     context.checking(new Expectations() {{
       allowing(sensor).powerUp();
@@ -45,13 +45,20 @@ public class CameraTest {
 
   @Test
   public void pressingShutterWhenPowerIsOffDoesNothing() {
-    Camera cam = new Camera(sensor, memCard);
-    assertFalse(cam.pressShutter());
+    Camera cam = new Camera(sensor, memCard, data);
+
+    context.checking(new Expectations() {{
+      never(sensor).readData();
+      never(memCard).write(data);
+
+    }});
+
+    cam.pressShutter();
   }
 
   @Test
   public void pressingShutterWhenPowerIsOnCopiesDataFromSensorToMemoryCard() {
-    Camera cam = new Camera(sensor, memCard);
+    Camera cam = new Camera(sensor, memCard, data);
 
 
     context.checking(new Expectations() {{
@@ -65,7 +72,7 @@ public class CameraTest {
 
   @Test
   public void ifDataIsBeingWrittenSwitchingOffCameraDoesNotPowerDownSensor() {
-    Camera cam = new Camera(sensor, memCard);
+    Camera cam = new Camera(sensor, memCard, data);
 
     context.checking(new Expectations() {{
       allowing(sensor).powerUp();
@@ -81,7 +88,7 @@ public class CameraTest {
 
   @Test
   public void onceWritingDataIsCompletedCameraPowersDownSensor() {
-    Camera cam = new Camera(sensor, memCard);
+    Camera cam = new Camera(sensor, memCard, data);
 
     context.checking(new Expectations() {{
       allowing(sensor).powerUp();
