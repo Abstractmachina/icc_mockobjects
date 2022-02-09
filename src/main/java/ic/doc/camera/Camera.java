@@ -41,5 +41,6 @@ public class Camera implements WriteListener {
   @Override
   public void writeComplete() {
     isIdle = true;
+    sensor.powerDown();
   }
 }

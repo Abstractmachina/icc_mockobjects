@@ -80,25 +80,7 @@ public class CameraTest {
   }
 
   @Test
-  public void ifDataIsDoneBeingWrittenSwitchingOffCameraPowersDownSensor() {
-    Camera cam = new Camera(sensor, memCard);
-
-    context.checking(new Expectations() {{
-      allowing(sensor).powerUp();
-      allowing(sensor).readData();
-      allowing(memCard).write(data);
-      oneOf(sensor).powerDown();
-    }});
-
-    cam.powerOn();
-    cam.pressShutter();
-    cam.writeComplete();
-    cam.powerOff();
-  }
-
-  //once writing the data has completed, then the camera powers down the sensor
-  @Test
-  public void onceWritingDataisCompletedCameraPowersDownSensor() {
+  public void onceWritingDataIsCompletedCameraPowersDownSensor() {
     Camera cam = new Camera(sensor, memCard);
 
     context.checking(new Expectations() {{
