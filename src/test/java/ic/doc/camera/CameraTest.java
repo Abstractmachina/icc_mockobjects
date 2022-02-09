@@ -1,11 +1,7 @@
 package ic.doc.camera;
 
-import static org.junit.Assert.assertFalse;
-
 import org.jmock.Expectations;
-import org.jmock.Sequence;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.jmock.internal.InvocationExpectation;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -16,11 +12,11 @@ public class CameraTest {
   private final Sensor sensor = context.mock(Sensor.class);
   private final MemoryCard memCard = context.mock(MemoryCard.class);
 
-  static final byte[] data = { 1, 2, 3, 4};
+  static final byte[] data = {1, 2, 3, 4};
 
   @Test
   public void switchingTheCameraOnPowersUpTheSensor() {
-    Camera cam = new Camera(sensor, memCard,data);
+    Camera cam = new Camera(sensor, memCard, data);
 
     context.checking(
         new Expectations() {
@@ -35,23 +31,28 @@ public class CameraTest {
   public void switchingCameraOffPowersDownSensor() {
     Camera cam = new Camera(sensor, memCard, data);
 
-    context.checking(new Expectations() {{
-      allowing(sensor).powerUp();
-      exactly(1).of(sensor).powerDown();
-    }});
-      cam.powerOn();
-      cam.powerOff();
+    context.checking(
+        new Expectations() {
+          {
+            allowing(sensor).powerUp();
+            exactly(1).of(sensor).powerDown();
+          }
+        });
+    cam.powerOn();
+    cam.powerOff();
   }
 
   @Test
   public void pressingShutterWhenPowerIsOffDoesNothing() {
     Camera cam = new Camera(sensor, memCard, data);
 
-    context.checking(new Expectations() {{
-      never(sensor).readData();
-      never(memCard).write(data);
-
-    }});
+    context.checking(
+        new Expectations() {
+          {
+            never(sensor).readData();
+            never(memCard).write(data);
+          }
+        });
 
     cam.pressShutter();
   }
@@ -60,12 +61,14 @@ public class CameraTest {
   public void pressingShutterWhenPowerIsOnCopiesDataFromSensorToMemoryCard() {
     Camera cam = new Camera(sensor, memCard, data);
 
-
-    context.checking(new Expectations() {{
-      allowing(sensor).powerUp();
-      exactly(1).of(sensor).readData();
-      exactly(1).of(memCard).write(data);
-    }});
+    context.checking(
+        new Expectations() {
+          {
+            allowing(sensor).powerUp();
+            exactly(1).of(sensor).readData();
+            exactly(1).of(memCard).write(data);
+          }
+        });
     cam.powerOn();
     cam.pressShutter();
   }
@@ -74,12 +77,15 @@ public class CameraTest {
   public void ifDataIsBeingWrittenSwitchingOffCameraDoesNotPowerDownSensor() {
     Camera cam = new Camera(sensor, memCard, data);
 
-    context.checking(new Expectations() {{
-      allowing(sensor).powerUp();
-      allowing(sensor).readData();
-      allowing(memCard).write(data);
-      never(sensor).powerDown();
-    }});
+    context.checking(
+        new Expectations() {
+          {
+            allowing(sensor).powerUp();
+            allowing(sensor).readData();
+            allowing(memCard).write(data);
+            never(sensor).powerDown();
+          }
+        });
 
     cam.powerOn();
     cam.pressShutter();
@@ -90,16 +96,18 @@ public class CameraTest {
   public void onceWritingDataIsCompletedCameraPowersDownSensor() {
     Camera cam = new Camera(sensor, memCard, data);
 
-    context.checking(new Expectations() {{
-      allowing(sensor).powerUp();
-      allowing(sensor).readData();
-      allowing(memCard).write(data);
-      oneOf(sensor).powerDown();
-    }});
+    context.checking(
+        new Expectations() {
+          {
+            allowing(sensor).powerUp();
+            allowing(sensor).readData();
+            allowing(memCard).write(data);
+            oneOf(sensor).powerDown();
+          }
+        });
 
     cam.powerOn();
     cam.pressShutter();
     cam.writeComplete();
   }
-
 }
