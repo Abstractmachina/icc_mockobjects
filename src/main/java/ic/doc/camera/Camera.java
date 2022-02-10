@@ -6,12 +6,10 @@ public class Camera implements WriteListener {
   private boolean isIdle;
   private final Sensor sensor;
   private final MemoryCard memoryCard;
-  private final byte[] data;
 
-  Camera(Sensor sensor, MemoryCard mc, byte[] d) {
+  Camera(Sensor sensor, MemoryCard mc) {
     this.sensor = sensor;
     memoryCard = mc;
-    this.data = d;
     isOn = false;
     isIdle = true;
   }
@@ -20,8 +18,8 @@ public class Camera implements WriteListener {
     if (!isOn) {
       return;
     }
-    sensor.readData();
-    memoryCard.write(data);
+
+    memoryCard.write(sensor.readData());
     isIdle = false;
   }
 

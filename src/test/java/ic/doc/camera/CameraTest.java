@@ -12,11 +12,9 @@ public class CameraTest {
   private final Sensor sensor = context.mock(Sensor.class);
   private final MemoryCard memCard = context.mock(MemoryCard.class);
 
-  static final byte[] data = {1, 2, 3, 4};
-
   @Test
   public void switchingTheCameraOnPowersUpTheSensor() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
@@ -29,7 +27,7 @@ public class CameraTest {
 
   @Test
   public void switchingCameraOffPowersDownSensor() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
@@ -44,13 +42,13 @@ public class CameraTest {
 
   @Test
   public void pressingShutterWhenPowerIsOffDoesNothing() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
           {
             never(sensor).readData();
-            never(memCard).write(data);
+            never(memCard).write(with(any(byte[].class)));
           }
         });
 
@@ -59,14 +57,14 @@ public class CameraTest {
 
   @Test
   public void pressingShutterWhenPowerIsOnCopiesDataFromSensorToMemoryCard() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
           {
             allowing(sensor).powerUp();
             exactly(1).of(sensor).readData();
-            exactly(1).of(memCard).write(data);
+            exactly(1).of(memCard).write(with(any(byte[].class)));
           }
         });
     cam.powerOn();
@@ -75,14 +73,14 @@ public class CameraTest {
 
   @Test
   public void ifDataIsBeingWrittenSwitchingOffCameraDoesNotPowerDownSensor() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
           {
             allowing(sensor).powerUp();
             allowing(sensor).readData();
-            allowing(memCard).write(data);
+            allowing(memCard).write(with(any(byte[].class)));
             never(sensor).powerDown();
           }
         });
@@ -94,14 +92,14 @@ public class CameraTest {
 
   @Test
   public void onceWritingDataIsCompletedCameraPowersDownSensor() {
-    Camera cam = new Camera(sensor, memCard, data);
+    Camera cam = new Camera(sensor, memCard);
 
     context.checking(
         new Expectations() {
           {
             allowing(sensor).powerUp();
             allowing(sensor).readData();
-            allowing(memCard).write(data);
+            allowing(memCard).write(with(any(byte[].class)));
             oneOf(sensor).powerDown();
           }
         });
